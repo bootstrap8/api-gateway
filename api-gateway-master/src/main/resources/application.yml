@@ -1,0 +1,156 @@
+spring:
+  application:
+    name: api-gateway-master
+
+  main:
+    allow-bean-definition-overriding: true
+
+  messages:
+    basename: i18n/message
+    encoding: UTF-8
+
+  # 数据库配置
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      jdbc-url: jdbc:h2:tcp://localhost:30135/~/.h2/gateway;DB_CLOSE_DELAY=-1
+      driver-class-name: org.h2.Driver
+      username: openstack
+      password: ENC(5sBjIJlyS5Ks6Jwam643gbSsDvjxIsaNKfEFTVfUAqs4Pg/AM5vm7XhiutlX+oJA)
+      maximum-pool-size: 5
+      connection-test-query: select 1
+      max-lifetime: 300000
+
+  cloud:
+    # gateway的定制化配置
+    gateway:
+      reload:
+        cron: "0 */10 * * * ?"
+      enabled: true
+      discovery:
+        locator:
+          # 启用通过服务发现获取路由规则
+          enabled: true
+          # 将服务ID转换为小写
+          lower-case-service-id: true
+      streaming-media-types: '*/*'
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowCredentials: true
+            allowedHeaders: '*'
+            allowedMethods: '*'
+            allowed-origins:
+              - http://localhost
+              - https://localhost
+              - http://localhost:8080
+              - http://localhost:20131
+              - http://localhost:30131
+              - http://docker.for.mac.host.internal:8080
+              - http://docker.for.mac.host.internal:20131
+              - http://docker.for.mac.host.internal:30131
+              - https://console.ecloud.10086.cn:31015
+              - http://console.ecloud.10086.cn:31015
+              - https://console.ecloud.10086.cn
+              - http://console.ecloud.10086.cn
+              - https://ecloud.10086.cn:31015
+              - http://ecloud.10086.cn:31015
+              - http://console.espconsole-multiaz.test.internal
+              - http://10.251.150.113:58819
+      x-forwarded:
+        enabled: true
+        for-enabled: true
+        host-enabled: true
+      httpclient:
+        rewrite-response-header: false
+        ssl:
+          useInsecureTrustManager: true
+        websocket:
+          max-frame-payload-length: 10485760
+          connect-timeout: 5000
+          max-header-size=: 65565
+          pool:
+            type: fixed
+            max-idle-time: 10000
+            max-connections: 500
+            acquire-timeout: 45000
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials
+        - DedupeResponseHeader=Access-Control-Allow-Origin
+        - DedupeResponseHeader=Access-Control-Expose-Headers
+      http:
+        use-forwarded-headers: true
+    # 负载均衡配置
+    loadbalancer:
+      cache:
+        enable: true
+        capacity: 2048
+        ttl: 35s
+      configurations: health-check
+      health-check:
+        refetch-instances: true
+        refetch-instances-interval: 10s
+        repeat-health-check: false
+        path:
+          default: /check-me
+        initialDelay: 0
+        interval: 5s
+
+    # Consul服务发现配置
+    consul:
+      enabled: false
+      discovery:
+        enabled: false
+        register: false
+      host: docker.for.mac.host.internal
+      port: 8500
+
+    # Zk服务发现配置
+    zookeeper:
+      enabled: false
+      discovery:
+        enabled: false
+        register: false
+        root: /services
+      connect-string: docker.for.mac.host.internal:12181
+
+    # nacos服务发现配置
+    nacos:
+      discovery:
+        enabled: false
+        server-addr: docker.for.mac.host.internal:8848
+        namespace: your-namespace
+
+# gateway的端点配置
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      base-path: /gateway-dashboard
+      exposure:
+        include: route-ext,health
+    jmx:
+      exposure:
+        exclude: '*'
+  endpoint:
+    health:
+      enabled: true
+
+server:
+  port: 30131
+
+mybatis:
+  mapper-locations: classpath*:mappers/*.xml,classpath*:**/mapper/common/*Mapper.xml,classpath*:**/mapper/mysql/*Mapper.xml
+  type-aliases-package: com.github.hbq969.gateway
+  config-location: classpath:jpaConfig.xml
+
+eureka:
+  instance:
+    instance-id: ${eureka.instance.ip-address}:${server.port}
+    ip-address: docker.for.mac.host.internal
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:30140/eureka/
+    register-with-eureka: true
+    enabled: false

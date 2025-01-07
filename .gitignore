@@ -1,0 +1,9 @@
+/.idea
+/target
+/logs
+/api-gateway-manage/.idea
+/api-gateway-manage/target
+/api-gateway-master/.idea
+/api-gateway-master/target
+/api-gateway-manage/src/main/resources/static/node_modules
+/api-gateway-manage/src/main/resources/static/ui-gw

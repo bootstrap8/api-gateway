@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.github.hbq969.gateway.manage.dao.RouteDao">
+  <update id="createUserInfo">
+    create table `tab_gateway_user`
+    (
+      `username` varchar(50) primary key,
+      `password` varchar(500) not null,
+      `enabled`  numeric(1) default 1
+    )
+  </update>
+
+  <update id="createUserAuthorities">
+    create table `tab_gateway_u_authorities`
+    (
+      `username` varchar(50) primary key,
+      `authority` varchar(500) not null
+    )
+  </update>
+
+  <update id="createRouteConfig">
+    create table `tab_gateway_route`(
+      `route_id` varchar(100) primary key,
+      `uri` varchar(500),
+      `predicates` varchar(1000),
+      `filters` varchar(1000),
+      `route_order` numeric(10),
+      `enabled`     numeric(2) default 1,
+      `update_time` numeric(20),
+      `temp_id` numeric(20)
+      )
+  </update>
+  <update id="createRouteTemplate">
+    create table `tab_gateway_template`
+    (
+      `t_id`    varchar(100) primary key,
+      `name`         varchar(500),
+      `uri`         varchar(500),
+      `predicates`  varchar(1000),
+      `filters`     varchar(1000),
+      `t_order` numeric(10)
+    )
+  </update>
+</mapper>

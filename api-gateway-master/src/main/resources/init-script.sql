@@ -1,0 +1,4 @@
+insert into tab_gateway_route(route_id,uri,predicates,filters,route_order,enabled,update_time)
+values('gateway-local','http://localhost:30139','[{"args":{"pattern":"/api/web/gateway/local/**"},"name":"Path"}]','[{"name": "RewritePath","args": {"regexp": "/api/web/gateway/local/(?<remaining>.*)","replacement": "/${remaining}"}}]',0,1,1686826889000);
+insert into tab_gateway_route(route_id,uri,predicates,filters,route_order,enabled,update_time)
+values('gateway-k8s-default','http://api-gateway-manage.default.svc.cluster.local:30139','[{"args":{"pattern":"/api/web/gateway/k8s-default/**"},"name":"Path"}]','[{"name": "RewritePath","args": {"regexp": "/api/web/gateway/k8s-default/(?<remaining>.*)","replacement": "/${remaining}"}}]',0,1,1686826889000);

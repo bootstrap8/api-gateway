@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: eureka
+server:
+  port: 30140
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://api-gateway-eureka-statefulset-0.api-gateway-eureka.default.svc.cluster.local:30140/eureka/
+  server:
+    enable-self-preservation: false
+    eviction-interval-timer-in-ms: 5000

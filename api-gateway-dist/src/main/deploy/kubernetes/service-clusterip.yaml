@@ -1,0 +1,162 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway-master
+  namespace: ${k8s_ns}
+  labels:
+    app: api-gateway-master
+spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ports:
+    - port: 30131
+      targetPort: 30131
+      protocol: TCP
+      name: master
+  selector:
+    app: api-gateway-master
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway-manage
+  namespace: ${k8s_ns}
+  labels:
+    app: api-gateway-manage
+spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ports:
+    - port: 30139
+      targetPort: 30139
+      protocol: TCP
+      name: manage
+  selector:
+    app: api-gateway-manage
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: api-gateway-manage-deployment
+  namespace: ${k8s_ns}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      name: api-gateway-manage
+  template:
+    metadata:
+      labels:
+        name: api-gateway-manage
+        app: api-gateway-manage
+    spec:
+      restartPolicy: Always
+      volumes:
+        - name: safebox-logs
+          hostPath:
+            path: /apps/logs/bcsec/safebox/normal/api-gateway/manage
+      containers:
+        - name: api-gateway-manage-deployment
+          image: ${docker_prefix}/api-gateway-img:${tag}
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 120
+            httpGet:
+              port: 30139
+              path: /common/health
+            initialDelaySeconds: 30
+            periodSeconds: 3
+            timeoutSeconds: 2
+          readinessProbe:
+            failureThreshold: 120
+            httpGet:
+              port: 30139
+              path: /common/health
+            initialDelaySeconds: 30
+            periodSeconds: 3
+            timeoutSeconds: 2
+          resources:
+            requests:
+              cpu: '0.5'
+              memory: 900Mi
+            limits:
+              cpu: '1'
+              memory: 1.5Gi
+          volumeMounts:
+            - mountPath: /apps/logs/bcsec/safebox
+              name: safebox-logs
+          ports:
+            - containerPort: 30139
+          command: ["java"]
+          args: ["-Xmx800m","-Xms800m","-DAPP_SN=api-gateway-manage","-Dspring.profiles.active=${spring_profiles_active}", "-Dspring.main.allow-bean-definition-overriding=true","-Dreactor.netty.http.server.accessLogEnabled=true","-Dfile.encoding=utf-8","-XX:+UseG1GC","-XX:MaxGCPauseMillis=100","-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+PrintGCDetails", "-XX:+PrintGCDateStamps", "-Xloggc:/opt/app/api-gateway/manage/gc.log", "-jar","/opt/app/api-gateway/manage/lib/api-gateway-manage-1.0.jar"]
+          env:
+            - name: spring_profiles_active
+              value: "${spring_profiles_active}"
+            - name: gateway.endpoint.refresh.host
+              value: "http://api-gateway-master:30131"
+            - name: spring.security.enabled
+              value: "false"
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: api-gateway-master-deployment
+  namespace: ${k8s_ns}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      name: api-gateway-master
+  template:
+    metadata:
+      labels:
+        name: api-gateway-master
+        app: api-gateway-master
+    spec:
+      restartPolicy: Always
+      volumes:
+        - name: safebox-logs
+          hostPath:
+            path: /apps/logs/bcsec/safebox/normal/api-gateway/master
+      containers:
+        - name: api-gateway-master-deployment
+          image: ${docker_prefix}/api-gateway-img:${tag}
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 120
+            tcpSocket:
+              port: 30131
+            initialDelaySeconds: 30
+            periodSeconds: 3
+            timeoutSeconds: 2
+          readinessProbe:
+            failureThreshold: 120
+            tcpSocket:
+              port: 30131
+            initialDelaySeconds: 30
+            periodSeconds: 3
+            timeoutSeconds: 2
+          resources:
+            requests:
+              cpu: '0.5'
+              memory: 900Mi
+            limits:
+              cpu: '1'
+              memory: 1.5Gi
+          volumeMounts:
+            - mountPath: /apps/logs/bcsec/safebox
+              name: safebox-logs
+          ports:
+            - containerPort: 30131
+          command: [ "java" ]
+          args: [ "-Xmx800m","-Xms800m","-DAPP_SN=api-gateway-master","-Dspring.profiles.active=${spring_profiles_active}", "-Dspring.main.allow-bean-definition-overriding=true","-Dreactor.netty.http.server.accessLogEnabled=true","-Dfile.encoding=utf-8","-XX:+UseG1GC","-XX:MaxGCPauseMillis=100", "-XX:MetaspaceSize=128m", "-XX:MaxMetaspaceSize=256m", "-XX:+PrintGCDetails", "-XX:+PrintGCDateStamps", "-Xloggc:/opt/app/api-gateway/master/gc.log", "-jar","/opt/app/api-gateway/master/lib/api-gateway-master-1.0.jar" ]
+          env:
+            - name: spring_profiles_active
+              value: "${spring_profiles_active}"
+            - name: gateway.endpoint.refresh.host
+              value: "http://api-gateway-master:30131"

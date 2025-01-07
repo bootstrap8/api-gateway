@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.github.hbq969.gateway.master.route.dao.RouteDao">
+  <update id="createRouteConfig">
+    create table `tab_gateway_route`(
+      `route_id` varchar(100) primary key,
+      `uri` varchar(500),
+      `predicates` varchar(1000),
+      `filters` varchar(1000),
+      `route_order` numeric(10),
+      `enabled`     numeric(2) default 1,
+      `update_time` numeric(20),
+      `temp_id` numeric(5)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+  </update>
+</mapper>

@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: api-gateway-eureka
+server:
+  port: 30140
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:30140/eureka/
+  server:
+    enable-self-preservation: false
+    eviction-interval-timer-in-ms: 5000

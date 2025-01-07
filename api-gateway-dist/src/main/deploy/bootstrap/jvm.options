@@ -1,0 +1,10 @@
+-Dspring.profiles.active=default
+-Dspring.main.allow-bean-definition-overriding=true
+-Dreactor.netty.http.server.accessLogEnabled=true
+
+-Dfile.encoding=utf-8
+
+-Xms512m
+-Xmx512m
+
+-DAPP_SN=api-gateway

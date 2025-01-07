@@ -1,0 +1,50 @@
+spring:
+  # 数据库配置
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    dynamic:
+      enabled: true
+      base-packages: com.github.hbq969
+      default-lookup-key: hikari
+    hikari:
+      jdbc-url: jdbc:mysql://docker.for.mac.host.internal:3306/openstack?useUnicode=true&serverTimezone=GMT%2B8&characterEncoding=utf8
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: openstack
+      password: Ui#(23@
+      maximum-pool-size: 20
+      minimum-idle: 5
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
+
+mybatis:
+  mapper-locations:
+    - classpath*:mappers/*.xml
+    - classpath*:**/mapper/common/*Mapper.xml
+    - classpath*:**/mapper/mysql/*Mapper.xml
+  config-location: classpath:jpaConfig-mysql.xml
+
+# gateway endpoint端点
+gateway:
+  endpoint:
+    refresh:
+      host: http://docker.for.mac.host.internal:30131
+      uri: /gateway-dashboard/route-ext/load
+      url: ${gateway.endpoint.refresh.host}${gateway.endpoint.refresh.uri}
+
+# 使用那种方式通知路由变化, 支持http、kafka
+route:
+  notified:
+    way: discovery
+
+eureka:
+  instance:
+    instance-id: ${eureka.instance.ip-address}:${server.port}
+    ip-address: ${spring.cloud.client.ip-address}
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://api-gateway-eureka-statefulset-0.api-gateway-eureka.default.svc.cluster.local:30140/eureka/
+    enabled: true
+    register-with-eureka: true
+    fetch-registry: true
+    registry-fetch-interval-seconds: 10
