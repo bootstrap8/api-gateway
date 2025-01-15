@@ -12,3 +12,10 @@ insert into tab_gateway_template(t_id,name,uri,predicates,filters,t_order) value
 insert into tab_gateway_template(t_id,name,uri,predicates,filters,t_order) values(12,'子网路由匹配','http://localhost:8080','[{"name":"Path","args":{"pattern":"/hbq/demo/**"}},{"name":"RemoteAddr","args":{"sources":"192.168.1.1/24"}}]','[{"name": "RewritePath","args": {"regexp": "/hbq/demo/(?<remaining>.*)","replacement": "/${remaining}"}}]',0);
 insert into tab_gateway_user(username,password) values('api-gateway','$2a$10$nFfo4ZaZQ9TVuQ1vloZSnOSGCVzOYRBAOxbv.cTW2ZAInZI8EdWUG');
 insert into tab_gateway_u_authorities(username,authority) values('api-gateway','USER');
+
+insert into h_menus(app,name,menu_desc,url,parent_key,order_index,menu_level,icon_name,created_at) values('api-gateway-manage','Dev','网关维护','/ui-gw','-',0,1,'GatewayIcon',1735800456);
+insert into h_menus(app,name,menu_desc,url,parent_key,order_index,menu_level,icon_name,created_at) values('api-gateway-manage','Route','路由配置','inner:/ui-gw/index.html','Dev',0,2,'HAProxyIcon',1735800456);
+insert into h_role_menus(app,role_name,menu_name) values('api-gateway-manage','MANAGE','Dev');
+insert into h_role_menus(app,role_name,menu_name) values('api-gateway-manage','MANAGE','Route');
+insert into h_role_menus(app,role_name,menu_name) values('api-gateway-manage','USER','Dev');
+insert into h_role_menus(app,role_name,menu_name) values('api-gateway-manage','USER','Route');

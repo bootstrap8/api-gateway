@@ -1,10 +1,9 @@
-# 用户指南
 
+## 快速开始 (Quick Start)
 
+## 构建 (Build)
 
-## 1. 构建
-
-1. 构架控制台UI
+Step 1: Build UI
 
 ```bash
 cd api-gateway/api-gateway-manage/src/main/resources/static
@@ -15,7 +14,7 @@ npm run build
 
 
 
-2. 构建gateway
+Step 2: Build gateway
 
 ```bash
 cd api-gateway
@@ -24,9 +23,9 @@ mvn -Dmaven.test.skip=true clean package -U
 
 
 
-## 2. 部署运行
+## 部署运行 (Deployment and Run)
 
-1. 本地部署
+### 本地部署 (Local Deployment)
 
 ```bash
 cd api-gateway-dist/target
@@ -36,8 +35,7 @@ sh bootstrap.sh
 ```
 
 
-
-2. 容器化部署
+### 容器化部署 (Containerized Deployment)
 
 ```bash
 cd api-gateway-dist/target/api-gateway-dist-1.0/deploy/docker
@@ -49,20 +47,42 @@ sh apply.sh
 
 
 
-## 2.Dashboard
+## 控制台 (Dashboard)
+
+
+http://localhost:30139/hbq969-sm/index.html
+
+user/123456
 
 
 
-- 访问链接
 
-http://localhost:30139/ui-gw/index.html
-
-
-
-- 控制台页面
-
-![image-20230616174659448](api-gateway-dist/src/main/resources/assets/image-20230616174659448.png)
+![image-20230616174659448](api-gateway-manage/src/main/resources/static/src/assets/Route.png)
 
 
 
-![image-20230616174738081](api-gateway-dist/src/main/resources/assets/image-20230616174738081.png)
+![image-20230616174738081](api-gateway-manage/src/main/resources/static/src/assets/Detail.png)
+
+
+## 许可 (License)
+
+The MIT License (MIT)
+
+Copyright (c) 2024 hbq969
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

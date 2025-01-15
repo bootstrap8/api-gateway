@@ -1,8 +1,6 @@
 <template>
   <div class="common-layout">
-    <keep-alive>
-      <router-view/>
-    </keep-alive>
+    <router-view/>
   </div>
 </template>
 
@@ -10,7 +8,4 @@
 </script>
 
 <style lang="scss">
-.common-layout{
-  margin: 50px;
-}
 </style>

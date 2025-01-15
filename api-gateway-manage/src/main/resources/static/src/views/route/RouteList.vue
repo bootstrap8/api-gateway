@@ -1,5 +1,5 @@
 <template>
-  <el-button type="info" :icon="SwitchButton" circle @click="logout" title="注销" class="logout"/>
+  <!--  <el-button type="info" :icon="SwitchButton" circle @click="logout" title="注销" class="logout"/>-->
   <div class="container">
     <el-divider content-position="left">查询条件</el-divider>
     <el-form :inline="true" class="demo-form-inline" size="small">
@@ -260,10 +260,11 @@ export default {
 <style scoped>
 .container {
   flex-grow: 1;
-  padding: 20px 1%;
+  padding: 20px 5%;
   overflow: auto;
   width: 90%;
 }
+
 .logout {
   position: absolute;
   right: 10px;

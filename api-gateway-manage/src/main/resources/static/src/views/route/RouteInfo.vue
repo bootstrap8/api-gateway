@@ -1,43 +1,49 @@
 <template>
-  <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="120px"
-           class="demo-ruleForm" size="small"
-           status-icon style="max-width: 50%">
-    <el-form-item label="路由模板">
-      <el-select v-model="tempSelect.tid" placeholder="请选择对应的模板"
-                 @change="tempChange(tempSelect.tid)"
-                 :disabled="tplDisabled" :popper-append-to-body="false" popper-class="eloption">
-        <el-option v-for="(item, index) in templates" :label="item.name" :value="item.tid"/>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="路由标识" prop="rid">
-      <el-input v-model="ruleForm.rid" placeholder="请输入路由标识..." :disabled="ridDisabled" @blur="orderReset()"/>
-    </el-form-item>
-    <el-form-item label="路由uri" prop="uri">
-      <el-input v-model="ruleForm.uri" placeholder="请输入uri..."/>
-    </el-form-item>
-    <el-form-item label="路由谓语" prop="predicates">
-      <el-input v-model="ruleForm.predicates" type="textarea" :rows="row" :cols="col" style="font-size: small"/>
-      <el-link @click="formatPredicates">
-        格式化<el-icon class="el-icon--right"><icon-view /></el-icon>
-      </el-link>
-    </el-form-item>
-    <el-form-item label="路由过滤" prop="filters">
-      <el-input v-model="ruleForm.filters" type="textarea" :rows="row" :cols="col" style="font-size: small"/>
-      <el-link @click="formatFilters">
-        格式化<el-icon class="el-icon--right"><icon-view /></el-icon>
-      </el-link>
-    </el-form-item>
-    <el-form-item label="优先级" prop="order" title="数值越小优先级越大">
-      <el-input v-model="ruleForm.order" placeholder="请输入路由标识..." type="number"/>
-    </el-form-item>
-    <el-form-item label="优先级" prop="order" style="display: none"  title="数值越小优先级越大">
-      <el-input v-model="ruleForm.enabled" type="number"/>
-    </el-form-item>
-    <el-form-item>
-      <el-button @click="goBack(ruleFormRef)">返回</el-button>
-      <el-button type="primary" @click="submitForm(ruleFormRef)">保存</el-button>
-    </el-form-item>
-  </el-form>
+  <div class="container">
+    <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" :inline="false" size="small" status-icon>
+      <el-form-item label="路由模板">
+        <el-select v-model="tempSelect.tid" placeholder="请选择对应的模板"
+                   @change="tempChange(tempSelect.tid)"
+                   :disabled="tplDisabled" :popper-append-to-body="false" popper-class="eloption">
+          <el-option v-for="(item, index) in templates" :label="item.name" :value="item.tid"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="路由标识" prop="rid">
+        <el-input v-model="ruleForm.rid" placeholder="请输入路由标识..." :disabled="ridDisabled" @blur="orderReset()"/>
+      </el-form-item>
+      <el-form-item label="路由uri" prop="uri">
+        <el-input v-model="ruleForm.uri" placeholder="请输入uri..."/>
+      </el-form-item>
+      <el-form-item label="路由谓语" prop="predicates">
+        <el-input v-model="ruleForm.predicates" type="textarea" :rows="row" :cols="col" style="font-size: small"/>
+        <el-link @click="formatPredicates">
+          格式化
+          <el-icon class="el-icon--right">
+            <icon-view/>
+          </el-icon>
+        </el-link>
+      </el-form-item>
+      <el-form-item label="路由过滤" prop="filters">
+        <el-input v-model="ruleForm.filters" type="textarea" :rows="row" :cols="col" style="font-size: small"/>
+        <el-link @click="formatFilters">
+          格式化
+          <el-icon class="el-icon--right">
+            <icon-view/>
+          </el-icon>
+        </el-link>
+      </el-form-item>
+      <el-form-item label="优先级" prop="order" title="数值越小优先级越大">
+        <el-input v-model="ruleForm.order" placeholder="请输入路由标识..." type="number"/>
+      </el-form-item>
+      <el-form-item label="优先级" prop="order" style="display: none" title="数值越小优先级越大">
+        <el-input v-model="ruleForm.enabled" type="number"/>
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="goBack(ruleFormRef)">返回</el-button>
+        <el-button type="primary" @click="submitForm(ruleFormRef)">保存</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -45,7 +51,7 @@
 import {onMounted, reactive, ref} from 'vue'
 import axios from '@/network'
 import type {FormInstance, FormRules} from 'element-plus'
-import { View as IconView } from '@element-plus/icons-vue'
+import {View as IconView} from '@element-plus/icons-vue'
 import {RouteInfo, RouteTemplate} from '@/type/Route'
 import {msg, queryScopeValue} from '@/utils/Utils'
 import router from '@/router/index'
@@ -88,21 +94,21 @@ const row = 8;
 const col = 20;
 
 const templates = reactive<RouteTemplate[]>([])
-const tempSelect = reactive<RouteTemplate>(new RouteTemplate(1, '','', '', '', 0));
+const tempSelect = reactive<RouteTemplate>(new RouteTemplate(1, '', '', '', '', 0));
 
 const tempChange = (tid: any) => {
-  const selected: RouteTemplate = templates.filter((t: RouteTemplate) => t.tid+'' == tid)[0];
+  const selected: RouteTemplate = templates.filter((t: RouteTemplate) => t.tid + '' == tid)[0];
   tempSelect.copy(selected);
   ruleForm.setUseTemp(selected);
   console.log('选择中的模板: {}', tempSelect);
 }
 
 // 优先级根据输入的路由标识进行调整
-const orderReset=()=>{
-  if(ruleForm.rid && ruleForm.rid.indexOf('gray')!=-1){
-    ruleForm.order=0
-  }else{
-    ruleForm.order=100
+const orderReset = () => {
+  if (ruleForm.rid && ruleForm.rid.indexOf('gray') != -1) {
+    ruleForm.order = 0
+  } else {
+    ruleForm.order = 100
   }
 }
 
@@ -191,12 +197,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.demo-ruleForm {
+.container {
+  flex-grow: 1;
+  padding: 20px 5%;
+  overflow: auto;
   width: 90%;
 }
-
-.eloption .el-select-dropdown__wrap {
-  max-height: 100%;
-}
-
 </style>

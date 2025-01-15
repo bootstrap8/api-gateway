@@ -1,20 +1,14 @@
-# Changelog
+# 版本记录
 
-All notable changes to this project will be documented in this file.
+该项目的所有显著变更都将记录在此文件中。
+格式基于“保留变更日志”，并且该项目遵循语义版本控制。
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
 
-## [1.0-SNAPSHOT] - 2024-04-28
-
-### Added
-
+## 2024-04-28
+### Features
 - 第一个版本，支持UI控制台配置路由，可支持本地及容器化部署
 
-### Fixed
-
-### Changed
-
-### Removed
+## 2025-01-12
+### Features
+- Dashboard页面增加login功能

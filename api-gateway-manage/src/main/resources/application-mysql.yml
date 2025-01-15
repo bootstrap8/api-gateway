@@ -15,6 +15,11 @@ spring:
       minimum-idle: 5
       max-lifetime: 1800000
       connection-test-query: SELECT 1
+  mvc:
+    interceptors:
+      login:
+        enabled: true
+        dialect: mysql
 
 mybatis:
   mapper-locations:
@@ -43,7 +48,7 @@ eureka:
     prefer-ip-address: true
   client:
     serviceUrl:
-      defaultZone: http://api-gateway-eureka-statefulset-0.api-gateway-eureka.default.svc.cluster.local:30140/eureka/
+      defaultZone: http://docker.for.mac.host.internal:30140/eureka/
     enabled: true
     register-with-eureka: true
     fetch-registry: true

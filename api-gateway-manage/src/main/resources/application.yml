@@ -2,8 +2,6 @@
 spring:
   application:
     name: api-gateway-manage
-  security:
-    enabled: false
 
   main:
     allow-bean-definition-overriding: true
@@ -22,13 +20,39 @@ spring:
             locations: classpath:/static/hbq969-dict/
           - handlers: /ui-gw/**
             locations: classpath:/static/ui-gw/
+          - handlers: /hbq969-sm/**
+            locations: classpath:/static/hbq969-sm/
       api-safe:
-        enabled: true
+        enabled: false
         include-path-patterns: /ui-gw/**,/hbq969-dict/**
         header-name: api-safe-token
         header-value-regex: 8DC75E91D4E143CF94BA29C46C43B24B
       mdc:
         enabled: true
+      login:
+        enabled: false
+        dialect: embedded
+        cookie-max-age-sec: 1800
+        include-urls:
+          - "/hbq969-sm/**"
+          - "/hbq969-dict/**"
+          - "/hbq969-tabula/**"
+          - "/common/encrypt/**"
+          - "/ui-gw/**"
+          - "/**/doc.html"
+          - "/**/swagger-ui.html"
+          - "/**/api-docs"
+        exclude-urls:
+          - "/**/error"
+          - "/common/health"
+          - "/hbq969-sm/index.html"
+          - "/hbq969-sm/**/*.js"
+          - "/hbq969-sm/**/*.css"
+          - "/hbq969-sm/**/*.png"
+          - "/hbq969-sm/**/*.jpg"
+          - "/hbq969-sm/**/*.map"
+          - "/hbq969-sm/**/*.ico"
+          - "/hbq969-sm/**/login"
 
   # 数据库配置
   datasource:
@@ -54,6 +78,15 @@ spring:
 
 server:
   port: 30139
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        max-age: ${spring.mvc.interceptors.login.cookie-max-age-sec}
+        secure: false
+        same-site: strict
+        path: /
+      timeout: 30m
 
 mybatis:
   mapper-locations: classpath*:mappers/*.xml,classpath*:**/mapper/common/*Mapper.xml,classpath*:**/mapper/embedded/*Mapper.xml
@@ -96,6 +129,11 @@ swagger:
 encrypt:
   config:
     enabled: true
+  restful:
+    enabled: true
+    aes:
+      show-log: true
+      key: DC2EE8931E434A44
 
 eureka:
   instance:
