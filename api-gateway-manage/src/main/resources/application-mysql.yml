@@ -7,10 +7,10 @@ spring:
       base-packages: com.github.hbq969
       default-lookup-key: hikari
     hikari:
-      jdbc-url: jdbc:mysql://docker.for.mac.host.internal:3306/openstack?useUnicode=true&serverTimezone=GMT%2B8&characterEncoding=utf8
+      jdbc-url: jdbc:mysql://docker.for.mac.host.internal:3306/workbench?useUnicode=true&serverTimezone=GMT%2B8&characterEncoding=utf8
       driver-class-name: com.mysql.cj.jdbc.Driver
-      username: openstack
-      password: Ui#(23@
+      username: cscenter
+      password: $AqCpZ@0392
       maximum-pool-size: 20
       minimum-idle: 5
       max-lifetime: 1800000

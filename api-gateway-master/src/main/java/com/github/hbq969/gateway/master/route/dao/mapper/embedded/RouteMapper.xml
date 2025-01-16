@@ -10,7 +10,10 @@
       `route_order` numeric(10),
       `enabled`     numeric(2) default 1,
       `update_time` numeric(20),
-      `temp_id` numeric(5)
+      `temp_id` numeric(5),
+      `app` varchar(255) NOT NULL,
+      `role_name` varchar(255) NOT NULL,
+      unique (`app`, `role_name`,`route_id`)
       )
   </update>
 </mapper>

@@ -30,6 +30,8 @@ public class RouteInfo implements Cloneable {
     private int enabled;
     private long updateTime;
     private int tempId;
+    private String app;
+    private String roleName;
 
     /**
      * uri是否包含多个负载地址
@@ -80,6 +82,8 @@ public class RouteInfo implements Cloneable {
         config.setUpdateTime(updateTime);
         config.setFmtUpdateTime(DateFormatUtils.format(updateTime, "yyyy-MM-dd HH:mm:ss"));
         config.setTempId(tempId);
+        config.setApp(app);
+        config.setRoleName(roleName);
         return config;
     }
 

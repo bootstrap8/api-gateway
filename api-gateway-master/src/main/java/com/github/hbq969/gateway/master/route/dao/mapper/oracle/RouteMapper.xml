@@ -11,7 +11,10 @@
       route_order number(10),
       enabled     number(2) default 1,
       update_time number(20),
-      temp_id number(5)
+      temp_id number(5),
+      app varchar2 (255) NOT NULL,
+      role_name varchar2 (255) NOT NULL,
+      CONSTRAINT u_gw_route UNIQUE (app, role_name, route_id)
     )
   </update>
 </mapper>

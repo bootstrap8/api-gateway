@@ -21,13 +21,16 @@
   <update id="createRouteConfig">
     create table tab_gateway_route
     (
-      route_id    varchar2(100) primary key,
-      uri         varchar2(500),
-      predicates  varchar2(1000),
-      filters     varchar2(1000),
-      route_order number(10),
-      enabled     number(2) default 1,
-      update_time number(20)
+      route_id varchar2 (100) primary key,
+      uri varchar2 (500),
+      predicates varchar2 (1000),
+      filters varchar2 (1000),
+      route_order number (10),
+      enabled number (2) default 1,
+      update_time number (20),
+      app varchar2 (255) NOT NULL,
+      role_name varchar2 (255) NOT NULL,
+      CONSTRAINT u_gw_route UNIQUE (app, role_name, route_id)
     )
   </update>
 

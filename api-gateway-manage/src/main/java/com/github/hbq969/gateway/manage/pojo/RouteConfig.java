@@ -24,6 +24,8 @@ public class RouteConfig {
   private long updateTime;
   private String fmtUpdateTime;
   private int tempId;
+  private String app;
+  private String roleName;
 
   public RouteInfo info() {
     RouteInfo info = new RouteInfo();
@@ -41,6 +43,8 @@ public class RouteConfig {
     info.setEnabled(enabled);
     info.setUpdateTime(updateTime);
     info.setTempId(tempId);
+    info.setApp(app);
+    info.setRoleName(roleName);
     return info;
   }
 }

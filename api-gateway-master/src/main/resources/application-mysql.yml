@@ -3,10 +3,10 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
-      jdbc-url: jdbc:mysql://docker.for.mac.host.internal:3306/openstack?useUnicode=true&serverTimezone=GMT%2B8&characterEncoding=utf8
+      jdbc-url: jdbc:mysql://docker.for.mac.host.internal:3306/workbench?useUnicode=true&serverTimezone=GMT%2B8&characterEncoding=utf8
       driver-class-name: com.mysql.cj.jdbc.Driver
-      username: openstack
-      password: Ui#(23@
+      username: cscenter
+      password: $AqCpZ@0392
       maximum-pool-size: 5
       connection-test-query: select 1
       max-lifetime: 300000

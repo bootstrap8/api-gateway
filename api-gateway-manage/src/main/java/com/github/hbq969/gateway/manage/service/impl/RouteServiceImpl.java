@@ -1,5 +1,6 @@
 package com.github.hbq969.gateway.manage.service.impl;
 
+import com.github.hbq969.code.sm.login.session.UserContext;
 import com.github.hbq969.gateway.manage.dao.RouteDao;
 import com.github.hbq969.gateway.manage.pojo.RouteConfig;
 import com.github.hbq969.gateway.manage.pojo.RouteInfo;
@@ -52,6 +53,9 @@ public class RouteServiceImpl implements RouteService, InitializingBean {
 
     private Server server;
 
+    @Value("${spring.application.name}")
+    private String app;
+
     @Override
     public void afterPropertiesSet() throws Exception {
         createRouteTemplate();
@@ -64,6 +68,8 @@ public class RouteServiceImpl implements RouteService, InitializingBean {
     @Override
     public void saveRouteConfig(RouteInfo route) {
         try {
+            route.setApp(app);
+            route.setRoleName(UserContext.get().getRoleName());
             route.setUpdateTime(System.currentTimeMillis());
             route.multipleRouteInfos().forEach(r -> {
                 dao.saveRouteConfig(r.config());
@@ -77,44 +83,74 @@ public class RouteServiceImpl implements RouteService, InitializingBean {
 
     @Override
     public void updateRouteConfig(RouteInfo route) {
+        boolean check = false;
         try {
-            route.setUpdateTime(System.currentTimeMillis());
-            if (route.isMultipleUri()) {
-                throw new UnsupportedOperationException("更新不支持配置uri多实例信息");
+            RouteConfig rc = dao.queryRouteBySession(app, UserContext.get().getRoleName(), route.getId());
+            if (rc != null) {
+                route.setApp(app);
+                route.setRoleName(UserContext.get().getRoleName());
+                route.setUpdateTime(System.currentTimeMillis());
+                if (route.isMultipleUri()) {
+                    throw new UnsupportedOperationException("更新不支持配置uri多实例信息");
+                }
+                dao.updateRouteConfig(route.config());
+                log.info("更新路由成功: {}", route);
+                check = true;
             }
-            dao.updateRouteConfig(route.config());
-            log.info("更新路由成功: {}", route);
         } catch (Exception e) {
             log.error("更新路由失败", e);
-            throw new RuntimeException(e.getCause());
+        }
+        if (!check) {
+            throw new UnsupportedOperationException("路由不在权限范围内或更新路由异常，请检查");
         }
     }
 
     @Override
     public void deleteRouteConfig(String id) {
+        boolean check = false;
         try {
-            dao.deleteRouteConfig(id);
-            log.info("删除路由成功: {}", id);
+            RouteConfig rc = dao.queryRouteBySession(app, UserContext.get().getRoleName(), id);
+            if (rc != null) {
+                dao.deleteRouteConfig(app, UserContext.get().getRoleName(), id);
+                log.info("删除路由成功: {}", id);
+                check = true;
+            }
         } catch (Exception e) {
-            throw new RuntimeException(e.getCause());
+            log.error("删除路由异常", e);
+        }
+        if (!check) {
+            throw new UnsupportedOperationException("路由不在权限范围内或删除路由异常，请检查");
         }
     }
 
     @Override
     public void updateStartOrStop(String id, int enabled) {
-        dao.updateStartOrStop(id, enabled, System.currentTimeMillis());
+        boolean check = false;
+        try {
+            RouteConfig rc = dao.queryRouteBySession(app, UserContext.get().getRoleName(), id);
+            if (rc != null) {
+                dao.updateStartOrStop(app, UserContext.get().getRoleName(), id, enabled, System.currentTimeMillis());
+                log.info("启停路由成功: {}", id);
+                check = true;
+            }
+        } catch (Exception e) {
+            log.error("启停路由异常", e);
+        }
+        if (!check) {
+            throw new UnsupportedOperationException("路由不在权限范围内或启停路由异常，请检查");
+        }
     }
 
     @Override
     public List<RouteInfo> queryAllRouteConfig(int pageNum, int pageSize, String routeSelect,
                                                String routeKey, int enabled) {
-        return dao.queryAllRouteConfig(new RowBounds(pageNum, pageSize), routeSelect, routeKey, enabled)
+        return dao.queryAllRouteConfig(new RowBounds(pageNum, pageSize), app, UserContext.get().getRoleName(), routeSelect, routeKey, enabled)
                 .stream().map(r -> r.info()).collect(Collectors.toList());
     }
 
     @Override
     public RouteInfo queryRoute(String id) {
-        RouteConfig config = dao.queryRoute(id);
+        RouteConfig config = dao.queryRouteBySession(app, UserContext.get().getRoleName(), id);
         return Objects.nonNull(config) ? config.info() : null;
     }
 

@@ -77,6 +77,8 @@
           <el-tag class="ml-2" type="info" v-else>{{ scope.row.fmtEnabled }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column prop="roleName" label="创建角色" :show-overflow-tooltip="true"
+                       header-align="center"/>
       <el-table-column prop="fmtUpdateTime" label="修改时间" :show-overflow-tooltip="true"
                        header-align="center"/>
     </el-table>
@@ -126,7 +128,7 @@ export default {
   },
   methods: {
     // 表格头
-    headerCellStyle()  {
+    headerCellStyle() {
       // 添加表头颜色
       return {backgroundColor: '#f5f5f5', color: '#333', fontWeight: 'bold'};
     },
@@ -135,9 +137,10 @@ export default {
       request({
         url: '/route/queryRouteOptions'
       }).then(res => {
-        console.log('请求到路由类型配置: {}', res)
         if (res.data.state == 'OK') {
           this.data.routeMetaSelects = res.data.body;
+        } else {
+          msg(res.data.errorMessage, 'error')
         }
       }).catch(e => {
         console.error(e);
@@ -149,7 +152,6 @@ export default {
     },
     // 查询触发
     queryRoutes() {
-      console.log('查询路由列表')
       request({
         url: '/route/queryAllRouteConfig',
         params: this.fq
@@ -165,6 +167,8 @@ export default {
               item.fmtEnabled = '停用'
             }
           })
+        }else{
+          msg(res.data.errorMessage, 'error')
         }
       }).catch(e => {
         console.error(e);
@@ -185,6 +189,8 @@ export default {
         if (res.data.state == 'OK') {
           msg('操作成功', 'success')
           this.queryRoutes()
+        }else{
+          msg(res.data.errorMessage, 'error')
         }
       }).catch(e => {
         alert('删除失败')
@@ -201,7 +207,6 @@ export default {
     },
     // 启停状态改变
     startOrStop(scope) {
-      console.log('启停选中的元素: ', scope.row);
       const newEnabled = scope.row.enabled == 1 ? 0 : 1;
       request({
         url: '/route/startOrStop',
@@ -211,6 +216,8 @@ export default {
         if (res.data.state == 'OK') {
           msg('修改成功', 'success')
           this.queryRoutes()
+        }else{
+          msg(res.data.errorMessage, 'error')
         }
       }).catch(e => {
         msg('修改失败', 'error')
@@ -224,6 +231,8 @@ export default {
       }).then(res => {
         if (res.data.state == 'OK') {
           msg('操作成功', 'success')
+        }else{
+          msg(res.data.errorMessage, 'error')
         }
       }).catch(e => {
         alert('刷新失败');
@@ -245,12 +254,11 @@ export default {
         query: scope.row
       })
     },
-    logout(){
-      window.location.href='/logout'
+    logout() {
+      window.location.href = '/logout'
     }
   },
   created() {
-    console.log('加载完Route.vue视图')
     this.getRoutMetaSelects()
     this.queryRoutes();
   }

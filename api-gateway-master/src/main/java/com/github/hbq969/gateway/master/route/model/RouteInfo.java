@@ -18,36 +18,38 @@ import java.util.Objects;
 @Data
 public class RouteInfo {
 
-  private String id;
-  private String uri;
-  private String predicates;
-  private String filters;
-  private int order;
+    private String id;
+    private String uri;
+    private String predicates;
+    private String filters;
+    private int order;
+    private String app;
+    private String roleName;
 
-  public RouteDefinition entry() {
-    RouteDefinition fin = new RouteDefinition();
-    fin.setId(id);
-    try {
-      fin.setUri(new URI(uri));
-    } catch (URISyntaxException e) {
+    public RouteDefinition entry() {
+        RouteDefinition fin = new RouteDefinition();
+        fin.setId(id);
+        try {
+            fin.setUri(new URI(uri));
+        } catch (URISyntaxException e) {
+        }
+        fin.setPredicates(GsonUtils.parseArray(predicates, new TypeToken<List<PredicateDefinition>>() {
+        }));
+        fin.setFilters(GsonUtils.parseArray(filters, new TypeToken<List<FilterDefinition>>() {
+        }));
+        fin.setOrder(order);
+        return fin;
     }
-    fin.setPredicates(GsonUtils.parseArray(predicates, new TypeToken<List<PredicateDefinition>>() {
-    }));
-    fin.setFilters(GsonUtils.parseArray(filters, new TypeToken<List<FilterDefinition>>() {
-    }));
-    fin.setOrder(order);
-    return fin;
-  }
 
-  public void to(RouteDefinition fin) {
-    this.id = fin.getId();
-    this.uri = fin.getUri().toString();
-    if (Objects.nonNull(fin.getPredicates())) {
-      this.predicates = GsonUtils.toJSONString(fin.getPredicates());
+    public void to(RouteDefinition fin) {
+        this.id = fin.getId();
+        this.uri = fin.getUri().toString();
+        if (Objects.nonNull(fin.getPredicates())) {
+            this.predicates = GsonUtils.toJSONString(fin.getPredicates());
+        }
+        if (Objects.nonNull(fin.getFilters())) {
+            this.filters = GsonUtils.toJSONString(fin.getFilters());
+        }
+        this.order = fin.getOrder();
     }
-    if (Objects.nonNull(fin.getFilters())) {
-      this.filters = GsonUtils.toJSONString(fin.getFilters());
-    }
-    this.order = fin.getOrder();
-  }
 }
