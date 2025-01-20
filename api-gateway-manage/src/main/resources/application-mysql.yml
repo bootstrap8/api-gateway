@@ -53,3 +53,10 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     registry-fetch-interval-seconds: 10
+
+operlog:
+  enabled: true
+
+tabula:
+  enabled: true
+  schema: workbench

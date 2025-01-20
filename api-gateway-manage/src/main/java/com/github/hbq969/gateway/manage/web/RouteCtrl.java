@@ -1,5 +1,6 @@
 package com.github.hbq969.gateway.manage.web;
 
+import com.github.hbq969.code.common.log.api.Log;
 import com.github.hbq969.code.common.restful.ReturnMessage;
 import com.github.hbq969.code.common.utils.GsonUtils;
 import com.github.hbq969.code.common.utils.ResourceUtils;
@@ -79,6 +80,7 @@ public class RouteCtrl {
     @ApiOperation("保存路由")
     @RequestMapping(path = "/saveRouteConfig", method = RequestMethod.POST)
     @ResponseBody
+    @Log(collectResult = true)
     public ReturnMessage<?> saveRouteConfig(@RequestBody RouteInfo route) {
         service.saveRouteConfig(route);
         service.refreshRouteConfig();
@@ -88,6 +90,7 @@ public class RouteCtrl {
     @ApiOperation("更新路由")
     @RequestMapping(path = "/updateRouteConfig", method = RequestMethod.POST)
     @ResponseBody
+    @Log(collectResult = true)
     public ReturnMessage<?> updateRouteConfig(@RequestBody RouteInfo route) {
         service.updateRouteConfig(route);
         service.refreshRouteConfig();
@@ -97,6 +100,7 @@ public class RouteCtrl {
     @ApiOperation("删除路由")
     @RequestMapping(path = "/deleteRouteConfig", method = RequestMethod.POST)
     @ResponseBody
+    @Log(collectResult = true)
     public ReturnMessage<?> deleteRouteConfig(@RequestBody Map info) {
         String id = MapUtils.getString(info, "id");
         service.deleteRouteConfig(id);
@@ -107,6 +111,7 @@ public class RouteCtrl {
     @ApiOperation("修改启停状态")
     @RequestMapping(path = "/startOrStop", method = RequestMethod.POST)
     @ResponseBody
+    @Log(collectResult = true)
     public ReturnMessage<?> startOrStop(@RequestBody Map info) {
         String id = MapUtils.getString(info, "id");
         int enabled = MapUtils.getIntValue(info, "enabled", 1);
@@ -119,6 +124,7 @@ public class RouteCtrl {
     @ApiOperation("刷新路由")
     @RequestMapping(path = "/refresh", method = RequestMethod.POST)
     @ResponseBody
+    @Log(collectResult = true)
     public ReturnMessage<?> refresh() {
         service.refreshRouteConfig();
         return ReturnMessage.success("刷新成功");

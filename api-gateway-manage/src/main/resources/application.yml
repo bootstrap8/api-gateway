@@ -18,13 +18,15 @@ spring:
         entries:
           - handlers: /hbq969-dict/**
             locations: classpath:/static/hbq969-dict/
+          - handlers: /hbq969-tabula/**
+            locations: classpath:/static/hbq969-tabula/
           - handlers: /ui-gw/**
             locations: classpath:/static/ui-gw/
           - handlers: /hbq969-sm/**
             locations: classpath:/static/hbq969-sm/
       api-safe:
         enabled: false
-        include-path-patterns: /ui-gw/**,/hbq969-dict/**
+        include-path-patterns: /ui-gw/**,/hbq969-dict/**,/hbq969-tabula/**
         header-name: api-safe-token
         header-value-regex: 8DC75E91D4E143CF94BA29C46C43B24B
       mdc:
@@ -147,3 +149,20 @@ eureka:
     fetch-registry: true
     registry-fetch-interval-seconds: 10
     enabled: false
+
+operlog:
+  enabled: false
+  policy: mysql
+  use-default-collect-policy: true
+  table-name: log_gateway
+  queue-capacity: 5000
+  batch-timeout-mills: 5000
+  batch-size: 50
+  thread-num: 1
+
+tabula:
+  enabled: false
+  dialect: mysql
+  schema: openstack
+  tables: log_gateway
+  open-edit-delete: false
